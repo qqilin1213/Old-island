@@ -1,0 +1,73 @@
+### 1、组件的引入
+
+
+
+```js
+//在.json写入代码,组件的引入
+{
+  "usingComponents": {
+    "navi-cmp": "/components/navi/navi"
+    //"文件名称随便命名" : "用绝对路径/相对路径都行"
+  }
+}
+
+// 组件的使用,在.wxml重写入代码
+<navi-cmp/>
+```
+
+### 2、尺寸单位 px, rpx
+
+
+
+```js
+告诉设计师,设计UI时最好按照: 750*1334, 用这个尺寸用px和rpx时特别简单, 此时px与设计尺寸2:1的关系, rpx与设计尺寸是1:1的关系;
+
+image组件默认宽度300px, 高度220px;
+
+rpx的优势会根据屏幕自适应, px则尺寸是固定的;
+```
+
+### 3、设置全局样式(app.wxss)
+
+
+
+```css
+// 小程序会在每个页面外部自动包裹一层page
+// 比如设置全局字体大小,文字样式
+
+// 如果使用了组件, 组件也会集成全局样式
+page{
+   font-family: PingFangSC-Thin; 
+   font-size:16px;
+  /* overflow: hidden; */
+}
+
+// 不是所有的全局样式都会被组件继承,组件能够继承的样式非常少
+```
+
+### 4、组件最好不要留有空白间距
+
+
+
+```css
+// 设置行高 line-height 等于 font-size
+font-size:24rpx;
+line-height: 24rpx;
+```
+
+### 5、容器设置自适应
+
+
+
+```css
+将容器display设置成flex,并不会改变容器块级元素的特性,需要设置宽高,只是改变了容器里子元素的特性. 所以要想让容器自适应宽度,将容器设置为 display:inline-flex;
+```
+
+### 6、bind: tap 和 catch: tap区别
+
+
+
+```js
+bind 事件绑定不会阻止冒泡事件向上冒泡;(多用)
+catch 事件绑定可以阻止冒泡事件向上冒泡;
+```
