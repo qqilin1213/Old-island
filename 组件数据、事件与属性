@@ -1,0 +1,60 @@
+### 1、数据绑定
+
+
+
+```js
+在.js文件中 
+//对外开发出来的数据(即外部可以修改属性的值),写在properties:{}里面
+/*组件的属性列表*/
+properties: {
+  like:{
+    type:Boolean, //类型(必填)
+    value:false, //初始值(选填)
+    observer:function(){//(选填)
+      
+    }    
+  },
+  count:{
+    type:Number
+  }
+}
+
+//对于组件内部所使用的变量,我们会定义在data:{}里面
+/*组件初始数据*/
+data:{
+  //数据绑定
+    count1:9
+  count2:999
+  yesSrc: 'images/like.png'
+  noSrc: 'images/like@dis.png'
+}
+
+在.wxml中使用
+//可以使用三元表达式
+//<image src="{{like?'images/like.png':'images/like@dis.png'}}"/>
+<image scr="{{like?yesSrc:noSrc}}"/>
+<text>{{like?count1:count2}}</text> 
+```
+
+### 2、**let，var与组件事件应用**
+
+
+
+```js
+// let允许你声明一个作用域被限制在块级中的变量、语法或者表达式, 与var关键字不同的是, 它声明的变量只能是全局或者整个函数块.
+// 官方推荐使用let
+
+/*组件的方法列表*/
+methods: {
+  onLike:function(event){
+    let like = this.properties.like
+    let count = this.properties.count
+    
+    count = like?count-1:count+1
+    this.setData ({//更新数据绑定状态
+      count:count,
+      like:!like
+    })
+  }
+}
+```
