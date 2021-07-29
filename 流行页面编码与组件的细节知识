@@ -1,0 +1,114 @@
+### 1、继承
+
+
+
+```js
+import {HTTP} from '../util/http.js'
+class ClassicModel extends HTTP {
+  getLatest(){
+    this.request({
+      
+    })
+  }
+}
+```
+
+### 2、让文字是一个自适应的宽度,并且可换行
+
+
+
+```css
+max-width: 550rpx
+```
+
+### 3、**自定义事件的激活与监听**
+
+
+
+```js
+/ 在.js文件中,创建自定义事件
+/*组件方法列表*/
+methods: {
+  onLike: function (event) {
+    if(this.properties.readOnly){
+      return
+    }
+    let count = this.properties.count
+    count = this.properties.like ? count - 1 : count + 1
+    this.setData({
+      count: count,
+      like: !this.properties.like
+    })
+    //创建并激活一个自定义事件,此自定义事件的目的: 1.通知页面用户点击了like组件 2.除了通知以外还要附加一个状态(用户取消了点赞还是用户进行了点赞)
+    //sp1.定义一个变量
+    let behavior = this.properties.like ? 'like' : 'cancel'
+    //sp2.在onLike中激活这个事件,并且这个事件需要附带behavior这个状态
+    //参数一(字符串):自定义事件的名称; 参数二(js对象):传入我们自己定义的属性,其实是在detail的event属性; 参数三(js对象):非自定义属性,有三个属性可设置,查看文档
+    this.triggerEvent('likediy', {
+      behavior: behavior
+    }, {})
+  }
+}
+
+/在其他.wxml中引入含自定义事件的组件,并监听自定义事件
+<like-cmp bind:likediy="onLike" class="like" like="{{是否点赞}}" count="{{点赞数量}}" />
+  
+/在其.js文件中,使用自定义事件及包含属性
+onLike:function(event){
+  console.log(event)
+  let behavior = event.detail.behavior
+  //服务器提交点赞或取消点赞
+    .
+    .
+    .
+}
+```
+
+### 4、组件的生命周期函数
+
+
+
+```css
+共5个函数:
+cerated: 在组件实例进入页面节点数执行,注意此时不能调用setData
+attached: 在组件实例进入页面节点树时执行(可以在此方法测试log用)
+ready: 在组件布局完成后执行,此时可以获取节点信息(使用SelectorQuery)
+moved: 在组件实例被移除到节点树另一个位置时执行
+detached: 在组件实例被从页面节点树移除时执行
+```
+
+### 5、**组件的data与properties**
+
+
+
+```js
+/*组件属性列表*/
+properties: {//组件接收外部数据,通过properties里定义属性来,接收参数
+  index:{
+    type:String,
+    observer:function(newVal,oldVal,changedPath){//sp0.observer函数的应用
+      let val = newVal < 10?'0'+newVal:newVal
+      this.setData({//sp1.千万不要在observer中修改自身属性,出现无限递归调用
+        _index:val//sp3.用外部变量接收
+      })
+    }
+  }
+},
+/*组件初始化数据*/
+data: {//data里的属性是函数类型,year和month均是函数,不能指定类型,直接给值就行
+  year; 0,
+  month: ''
+  _index:''//sp2.
+}
+properties和data的属性名不能相同,如果相同会被properties的属性覆盖
+```
+
+### 6、布局搭建注意事项
+
+
+
+```objectivec
+1.不要使用id选择器,使用类选择器
+2.如果认为容器宽度是占满整个屏幕,那么设置width: 100%;,否则自适应影响布局
+```
+
